@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1687143671 source:/home/davidl09/Desktop/wx_projects/Connect4_wx/main.cpp
+	"minimax.hpp"
+
+1687145071 /home/davidl09/Desktop/wx_projects/Connect4_wx/minimax.hpp
+	"board.hpp"
+	<algorithm>
+
+1687144640 /home/davidl09/Desktop/wx_projects/Connect4_wx/board.hpp
+	<stdexcept>
+	<array>
+	<iostream>
+	<memory>
+	<limits>
+

@@ -3,6 +3,7 @@
 *.save
 build/
 .vscode/
+*.cbp
 # Compiled Object files
 *.slo
 *.lo
