@@ -13,13 +13,11 @@ int main(){
     b.place_token(4, red);
     b.place_token(4, red);
     b.place_token(4, red);
-    b.place_token(4, red);
-    b.place_token(4, red);
-    b.place_token(4, red);
-    if(!b.place_token(4, red)) std::cout << "Full\n";
+    //b.place_token(4, red);
 
 
     b.print_board();
+    b.iswin(red) ? std::cout << "Win\n" : std::cout << "No win\n";
     /*
     std::unique_ptr<Board<6, 7>> ptr = std::make_unique<Board<6, 7>>();
     MiniMax m;

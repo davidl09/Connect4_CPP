@@ -1,9 +1,15 @@
 #ifndef BITBOARD_HPP
 #define BITBOARD_HPP
 
+#include <cassert>
+#include <cstdint>
+#include <iostream>
+#include <array>
+
 enum colour{
     yellow = 0 ,
-    red
+    red,
+    none
 };
 
 
@@ -11,17 +17,17 @@ class BitBoard{
 
     private:
     
-    uint64_t board[2] = {0};
+    std::array<uint64_t, 2> board;
 
     #define top_row 5
 
     /*
     Board bits below:
 
-        *
-        *******
-        *******
-        *******
+        * 
+        * * * * * * * 
+        * * * * * * * 
+        * * * * * * * 
     5   0 0 0 0 0 0 0    -->   **********************0000000000000000000000000000000000000000000000000 
     4   0 0 0 0 0 0 0 
     3   0 0 0 0 0 0 0 
@@ -68,10 +74,12 @@ class BitBoard{
 
 
     static const constexpr uint64_t row_mask(int row){
+        assert(row < 6);
         return (((uint64_t)0x7f) << (7 * row));
     }
 
     static const constexpr uint64_t col_mask(int col){
+        assert(col < 7);
         return (((uint64_t)0x810204081) << col);
     }
 
@@ -100,19 +108,40 @@ class BitBoard{
         board[red] = red;
     }
     
-    bool isdraw(){
+    bool isdraw(){ //must call this AFTER iswin()!!!
         if((all_tokens() & row_mask(5)) == row_mask(5)) return true;
         return false;
     }
     
     bool iswin(colour player){
         for(int i = 0; i < 6; i++){
-            if(board[player] )
+            if(board[player] & row_mask(i)){ //check if tokens in row/col to speed up
+                for(int j = 0; j < 4; j++){
+                    if((board[player] & row4_mask(i, j)) == row4_mask(i, j))
+                        return true;
+                }
+            }
+        }
+        for(int i = 0; i < 3; i++){
             for(int j = 0; j < 4; j++){
-                if(board[player] & row4_mask(i, j) == row_mask(i, j))
+                if((board[player] & right_diag_mask(i, j)) == right_diag_mask(i, j) || (board[player] & left_diag_mask(i, j + 3)) == left_diag_mask(i, j + 3))
                     return true;
             }
         }
+        for(int j = 0; j < 7; j++){
+            if(board[player] & col_mask(j)){    
+                for(int i = 0; i < 3; i++){
+                        if((board[player] & col4_mask(i, j)) == col4_mask(i, j))
+                            return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    int boardscore(){
+
     }
 
     const void print_board(){
