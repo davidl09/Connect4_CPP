@@ -1,9 +1,11 @@
-#include <bits/stdc++.h>
+#ifndef BITBOARD_HPP
+#define BITBOARD_HPP
 
-enum boards{
+enum colour{
     yellow = 0 ,
     red
 };
+
 
 class BitBoard{
 
@@ -76,7 +78,7 @@ class BitBoard{
 
     //game utility functions
 
-    bool place_token(const int column, const boards c){
+    bool place_token(const int column, const colour c){
         if((token_at_mask(top_row, column) & all_tokens()) == 0){
             int i = 5;
 
@@ -87,8 +89,7 @@ class BitBoard{
         }
         return false;
     }
-
-
+    
     BitBoard(){
         board[yellow] = 0ULL;
         board[red] = 0ULL;
@@ -98,7 +99,21 @@ class BitBoard{
         board[yellow] = yellow;
         board[red] = red;
     }
-
+    
+    bool isdraw(){
+        if((all_tokens() & row_mask(5)) == row_mask(5)) return true;
+        return false;
+    }
+    
+    bool iswin(colour player){
+        for(int i = 0; i < 6; i++){
+            if(board[player] )
+            for(int j = 0; j < 4; j++){
+                if(board[player] & row4_mask(i, j) == row_mask(i, j))
+                    return true;
+            }
+        }
+    }
 
     const void print_board(){
         for(int i = top_row; i >= 0; i--){
@@ -116,5 +131,6 @@ class BitBoard{
         }std::cout << std::endl;
     }
 
-
 };
+
+#endif
