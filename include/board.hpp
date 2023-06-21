@@ -1,6 +1,10 @@
 #ifndef BOARD_HPP_INCLUDE
 #define BOARD_HPP_INCLUDE
 
+/*
+DEPRECATED! do not use. Use "bitboard.hpp" instead.
+*/
+
 #include <stdexcept>
 #include <array>
 #include <iostream>
