@@ -29,7 +29,7 @@ class MiniMaxBit{
     constexpr int getdepth(){
         return _depth;
     }
-
+/*
     int best_move(const std::unique_ptr<BitBoard>& board){
         std::vector<minmax_ret> moves;
         moves.reserve(7);
@@ -43,7 +43,7 @@ class MiniMaxBit{
             move_threads.push_back(std::thread(threaded_minimax, board->self(), &(moves[i]), this->_depth));
         }
 
-        for(auto it = move_threads.begin(); it != move_threads.end(); it++){
+        for(int i = 0; i < 7; i++){
 
         }
 
@@ -53,7 +53,7 @@ class MiniMaxBit{
         auto ptr = std::make_unique<BitBoard>(board);
         *retval = MiniMaxBit(depth).minimax(ptr, nullptr, false, depth - 1, INT32_MIN, INT32_MAX);
     }
-
+*/
     minmax_ret minimax(const std::unique_ptr<BitBoard>& board, LookupTable* ltable, bool maximizing, int depth, int alpha, int beta){
 
         //leaf node conditions
