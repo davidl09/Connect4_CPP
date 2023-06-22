@@ -5,7 +5,7 @@ include_directories(include)
 
 set(CXX_STANDARD 20)
 
-set(COMPILE_OPTIONS -0fast -pg)
+set(COMPILE_OPTIONS -0fast -pg --std=c++20 -Wall -Werror)
 
 #add_compile_options(-Ofast)
 

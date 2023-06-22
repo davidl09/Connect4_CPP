@@ -129,17 +129,11 @@ class BitBoard{
     BitBoard(){
         board[yellow] = 0;
         board[red] = 0;
-        //board.push_back(0ULL);
-        //board.push_back(0ULL);
     }
 
     BitBoard(uint64_t _yellow, uint64_t _red){
         board[yellow] = _yellow;
         board[red] = _red;
-        //board.push_back(y);
-        //board.push_back(r);
-    
-
     }
 
     std::array<uint64_t, 2>& self(){
