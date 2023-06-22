@@ -13,22 +13,38 @@ int main(int argc, char* argv[]){
     std::unique_ptr<BitBoard> b(std::make_unique<BitBoard>());
     
     LookupTable table;
+    int minimaxdepth;
+    try{
+        minimaxdepth = (argc > 1 ? std::stoi(argv[1]) : 11);
+    }catch(...){std::cout << ("Invalid depth option, using default=11\n");}
 
-    MiniMaxBit algo;
-    minmax_ret score_col;// = algo.minimax(b, &table, true, 9, INT32_MIN, INT32_MAX);
+    MiniMaxBit algo = MiniMaxBit(minimaxdepth);
+    minmax_ret score_col;
 
     b->print_board();
 
 
     int move;
     while(true){
+        
         std::cout << "Enter your move\n";
         std::cin >> move;
+
+        if(move < 0 || move > 6){
+            std::cout << "That was an invalid move, try again\n";
+            continue;
+        }
+
         b->place_token(move, red);
-        score_col = algo.minimax(b, &table, true, maxdepth, INT32_MIN, INT32_MAX);
-        std::cout << "\nScore: " << score_col.score << "\nColumn: " << score_col.column << "\n";
+        b->print_board();
+
+        std::cout << "AI plays...\n";
+        score_col = algo.minimax(b, &table, true, algo.getdepth(), INT32_MIN, INT32_MAX);
+        std::cout << "AI played in column: " << score_col.column << "\n";
+
         b->place_token(score_col.column, ai);
         b->print_board();
+
         if(b->iswin(ai)){
             std::cout << "AI wins!\n";
             exit(0);

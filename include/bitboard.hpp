@@ -8,6 +8,8 @@
 #include <array>
 #include <bit>
 
+#include "colours.hpp"
+
 enum colour{
     yellow = 0 ,
     red,
@@ -229,8 +231,8 @@ class BitBoard{
             std::cout << i << "  ";
 
             for(int j = 0; j < 7; j++){
-                std::cout << (((board[yellow] >> (7 * i + j)) & (uint64_t)0b1) ? "Y|" : 
-                    (((board[red] >> (7 * i + j)) & (uint64_t)0b1) ? "R|" : "_|"));
+                std::cout << (((board[yellow] >> (7 * i + j)) & (uint64_t)0b1) ? BOLD(FYEL("Y|")) : 
+                    (((board[red] >> (7 * i + j)) & (uint64_t)0b1) ? BOLD(FRED("R|")) : BOLD(FWHT("_|"))));
 
             }
             std::cout << "\n";
