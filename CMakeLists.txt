@@ -5,6 +5,8 @@ include_directories(include)
 
 set(CXX_STANDARD 20)
 
+set(COMPILE_OPTIONS -0fast -pg)
+
 #add_compile_options(-Ofast)
 
 add_executable(Connect4_CPP main.cpp)

@@ -2,38 +2,45 @@
 //#include "minimax.hpp"
 #include "bitboard.hpp"
 #include "ltable.hpp"
+#include "minimaxbit.hpp"
 
 extern "C"
 {
     
 }
 
-int main(){
-    BitBoard b;
-    //BitBoard::print_bitboard(b.square_mask(4, 5));
-/*
-    b.place_token(2, yellow);
-    b.place_token(4, red);
-    b.place_token(1, yellow);
-    b.place_token(2, red);
-    b.place_token(6, yellow);
-*/  b.place_token(3, red);
-
-    b.place_token(0, yellow);
-    b.place_token(6, red);
+int main(int argc, char* argv[]){
+    std::unique_ptr<BitBoard> b(std::make_unique<BitBoard>());
+    
     LookupTable table;
 
-    int score = table.consult(b.self());
+    MiniMaxBit algo;
+    minmax_ret score_col;// = algo.minimax(b, &table, true, 9, INT32_MIN, INT32_MAX);
+
+    b->print_board();
 
 
-    b.print_board();
-
-    std::cout << "Score: " << b.score(yellow) << "\nTable score: " << score << "\n";
-    //b.iswin(red) ? std::cout << "Win\n" : std::cout << "No win\n";
-    /*
-    std::unique_ptr<Board<6, 7>> ptr = std::make_unique<Board<6, 7>>();
-    MiniMax m;
-    minimax_ret r = m.minimax(ptr, true, 7, INT32_MIN, INT32_MAX);
-    std::cout << "Score: " << r.score << "\n" << "Column: " << r.column;
-    */
+    int move;
+    while(true){
+        std::cout << "Enter your move\n";
+        std::cin >> move;
+        b->place_token(move, red);
+        score_col = algo.minimax(b, &table, true, maxdepth, INT32_MIN, INT32_MAX);
+        std::cout << "\nScore: " << score_col.score << "\nColumn: " << score_col.column << "\n";
+        b->place_token(score_col.column, ai);
+        b->print_board();
+        if(b->iswin(ai)){
+            std::cout << "AI wins!\n";
+            exit(0);
+        }
+        if(b->iswin(human)){
+            std::cout << "You win!\n";
+            exit(0);
+        }
+        if(b->isdraw()){
+            std::cout << "Draw...\n";
+            exit(0);
+        }
+    }
+    
 }

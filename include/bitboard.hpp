@@ -136,6 +136,8 @@ class BitBoard{
         board[red] = _red;
         //board.push_back(y);
         //board.push_back(r);
+    
+
     }
 
     std::array<uint64_t, 2>& self(){
@@ -181,13 +183,18 @@ class BitBoard{
             for(int j = 1; j < 6; j+=2){
                 if(all_tokens() & square_mask(i, j)){
 
-                    score += (std::__popcount<uint64_t>(board[player] & square_mask(i, j)) + 
+                    score += 
+                        (
+                        std::__popcount<uint64_t>(board[player] & square_mask(i, j)) * 
                         std::__popcount(board[player] & x_mask(i, j)) +
-                        std::__popcount(board[player] & t_mask(i, j)));
-
-                    score -= (std::__popcount<uint64_t>(board[other_player(player)] & square_mask(i, j)) + 
-                        std::__popcount(board[other_player(player)] & x_mask(i, j)) + 
-                        std::__popcount(board[other_player(player)] & t_mask(i, j)));
+                        std::__popcount(board[player] & t_mask(i, j))
+                        ) 
+                        -
+                        (
+                        std::__popcount<uint64_t>(board[other_player(player)] & square_mask(i, j)) *
+                        std::__popcount(board[other_player(player)] & x_mask(i, j)) +
+                        std::__popcount(board[other_player(player)] & t_mask(i, j))
+                        );
                 }
                 
             }
