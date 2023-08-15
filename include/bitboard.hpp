@@ -113,6 +113,11 @@ class BitBoard{
 
 
     //game utility functions
+    
+    inline bool is_legal_move(const int column){
+        assert(column < 7 && column >= 0);
+        return (all_tokens() & token_at_mask(top_row, column) == 0)
+    }
 
     bool place_token(const int column, const colour c){
         if((token_at_mask(top_row, column) & all_tokens()) == 0){
@@ -126,6 +131,24 @@ class BitBoard{
         return false;
     }
     
+    std::unique_ptr<BitBoard> copy_place_token_ptr(const int column, const colour c){
+        auto ptr = std::make_unique<BitBoard>(*this);
+        
+        if(ptr->place_token(column, colour)){
+            return ptr;
+        }
+        
+        ptr->reset();
+        return ptr; //return nullptr if not legal move
+    }
+    
+    BitBoard copy_place_token(const int column, const colour c){
+        BitBoard temp(*this);
+        if(temp.place_token(column, c))
+            return temp;
+        throw std::invalid_argument("Failed to generate a new board - illegal move\n");
+    }
+    
     BitBoard(){
         board[yellow] = 0;
         board[red] = 0;
@@ -134,6 +157,11 @@ class BitBoard{
     BitBoard(uint64_t _yellow, uint64_t _red){
         board[yellow] = _yellow;
         board[red] = _red;
+    }
+    
+    BitBoard(BitBoard& old){
+        this->board[yellow] = old->self[yellow];
+        this->board[red] = old->self[red];
     }
 
     std::array<uint64_t, 2>& self(){

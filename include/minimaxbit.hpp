@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <algorithm>
+#include <array>
 #include <thread>
 #include <atomic>
 
@@ -29,26 +30,26 @@ class MiniMaxBit{
     constexpr int getdepth(){
         return _depth;
     }
-/*
+
     int best_move(const std::unique_ptr<BitBoard>& board){
-        std::vector<minmax_ret> moves;
-        moves.reserve(7);
-
-        std::vector<std::thread> move_threads;
-        move_threads.reserve(7);
-
-        for(int i = 0; i < 7; i++){
-            moves.push_back((minmax_ret){search_order[i], INT32_MIN});
-
-            move_threads.push_back(std::thread(threaded_minimax, board->self(), &(moves[i]), this->_depth));
-        }
+        minmax_ret best_move = {-1, INT32_MIN};
+        std::vector<std::unique_ptr<BitBoard>> newboards;
+        newboards.reserve(7);
+        int temp_score;
 
         for(int i = 0; i < 7; i++){
-
+            newboards.push_back(std::make_unique<BitBoard>(*board));
+            if(newboards.back()->place_token(search_order[i], ai)){
+                if((temp_score = minimax(newboards.back(), nullptr, false, _depth - 1, INT32_MIN, INT32_MAX).score) > best_move.score){
+                    best_move.score = temp_score;
+                    best_move.column = search_order[i];
+                }
+            }  
         }
+        return best_move.column;
 
     }
-
+/*
     static void threaded_minimax(uint64_t board[2], minmax_ret* retval, const int depth){
         auto ptr = std::make_unique<BitBoard>(board);
         *retval = MiniMaxBit(depth).minimax(ptr, nullptr, false, depth - 1, INT32_MIN, INT32_MAX);
@@ -62,7 +63,7 @@ class MiniMaxBit{
         if(board->isdraw())
             return(((minmax_ret){.column = -1, .score = 0}));
         if(board->iswin(ai))
-            return ((minmax_ret){.column =  -1, .score = WIN - (100000000 * (_depth - depth))});
+            return ((minmax_ret){.column =  -1, .score = WIN - (100000000 * (_depth - depth))}); //subtract from WIN with depth to favour sooner wins
         if(board->iswin(human))
             return ((minmax_ret){.column =  -1, .score = LOSS});
 
