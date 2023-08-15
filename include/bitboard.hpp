@@ -19,6 +19,9 @@ enum colour{
 #define top_row 5
 #define other_player(a) (1 - a)
 
+#define ai yellow
+#define human red
+
 #define WIN INT32_MAX
 #define LOSS INT32_MIN
 
@@ -125,10 +128,23 @@ class BitBoard{
         }
         return false;
     }
+
+    const bool is_legal_move(int column)
+    {
+        assert(column >= 0 && column < 7);
+        return all_tokens() & token_at_mask(5, column);
+    }
     
     BitBoard(){
         board[yellow] = 0;
         board[red] = 0;
+    }
+
+    BitBoard(BitBoard& old_board, int new_move_col, colour to_play)
+    {
+        this->board[ai] = old_board.board[ai];
+        this->board[human] = old_board.board[human];
+        this->place_token(new_move_col, to_play);
     }
 
     BitBoard(uint64_t _yellow, uint64_t _red){
@@ -172,7 +188,7 @@ class BitBoard{
         return false;
     }
 
-    const inline int score(colour player){ //always returns score relative to yellow (ai) player.
+    const int score(colour player){ //always returns score relative to yellow (ai) player.
         assert(player != none);
         int score(0);
         for(int i = 1; i < 4; i+=2){
