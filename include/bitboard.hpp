@@ -132,7 +132,7 @@ class BitBoard{
     const bool is_legal_move(int column)
     {
         assert(column >= 0 && column < 7);
-        return all_tokens() & token_at_mask(5, column);
+        return ~(all_tokens() & token_at_mask(5, column));
     }
     
     BitBoard(){
@@ -191,6 +191,8 @@ class BitBoard{
     const int score(colour player){ //always returns score relative to yellow (ai) player.
         assert(player != none);
         int score(0);
+        //if(iswin(ai)) return WIN;
+        //if(iswin(human)) return LOSS;
         for(int i = 1; i < 4; i+=2){
             for(int j = 1; j < 6; j+=2){
                 if(all_tokens() & square_mask(i, j)){

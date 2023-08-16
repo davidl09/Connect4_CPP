@@ -5,6 +5,6 @@ include_directories(include)
 
 set(CXX_STANDARD 20)
 
-add_compile_options(-Og -pg --std=c++20 -Wall)
+add_compile_options(-O0 -pg --std=c++20 -Wall)
 
-add_executable(Connect4_CPP main.cpp)
+add_executable(Connect4_CPP test.cpp)

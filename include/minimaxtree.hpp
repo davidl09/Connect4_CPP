@@ -1,4 +1,5 @@
-#include <memory>
+#include <cmath>
+#include <algorithm>
 
 #include "bitboard.hpp"
 
@@ -9,14 +10,19 @@ class MinimaxTreeNode
 {
     private:
         BitBoard state;
-        int score;
+        const int score;
         const int player_turn;
-        const int depth;
-        std::vector<std::unique_ptr<MinimaxTreeNode>> child_nodes;
+        int depth;
+        std::vector<MinimaxTreeNode> child_nodes;
 
-        int score()
+        constexpr int get_score()
         {
             return score;
+        }
+
+        BitBoard get_state() //pass by copy to avoid modifying
+        {
+            return state;
         }
 
         bool is_terminal_node()
@@ -28,59 +34,94 @@ class MinimaxTreeNode
         {
             return depth <= 0;
         }
-/* need to add method to update depth
-        void add_node()
+
+        void add_layer()
         {
-            if(is_leaf_node() && !is_terminal_node())
+            if(!(is_leaf_node() || is_terminal_node()))
             {
                 for(int i = 0; i < 7; ++i)
                 {
                     if(state.is_legal_move(i))
-                        child_nodes.emplace_back(std::make_unique<MinimaxTreeNode>(state, other_player(to_play), i, depth - 1));
+                        child_nodes.emplace_back(
+                            MinimaxTreeNode(
+                                BitBoard(state, i, static_cast<colour>(player_turn)), 
+                                static_cast<colour>(other_player(player_turn)), depth - 1
+                                )
+                            );
                 } 
             }
         }
-*/
+
+        int where_last_placed(BitBoard& board) //will break if more than one token has been placed between state and provided board (argument).
+        {
+            auto diff = board.all_tokens() ^ this->state.all_tokens(); //only bit set to 1 should be where new token was placed.
+            return static_cast<int>(std::floor(std::log2(diff))) % 7; //board is 7 slots wide, so get the position of the bit and take % 7 to get column pos.
+        }
+
+        int where_last_placed(BitBoard&& board) //will break if more than one token has been placed between state and provided board (argument).
+        {
+            auto diff = board.all_tokens() ^ this->state.all_tokens(); //only bit set to 1 should be where new token was placed.
+            return static_cast<int>(std::floor(std::log2(diff))) % 7; //board is 7 slots wide, so get the position of the bit and take % 7 to get column pos.
+        }
+
     public:
-        MinimaxTreeNode(BitBoard& board, colour to_play, int column_to_play, int _depth) : player_turn(to_play), depth(_depth)
+        MinimaxTreeNode(BitBoard board, colour to_play, int _depth) 
+        : state(board), 
+        score(board.score(ai)),
+        player_turn(to_play), 
+        depth(_depth)
         {
-            state = board;
-            state.place_token(column_to_play, to_play);
-            if(state.iswin(ai))
-                score = WIN;
-            else if(state.iswin(human))
-                score = LOSS;
-            else score = state.score(ai);
-
-            if(!(state.isdraw() || state.iswin(ai) || state.iswin(human) || depth == 0))
-            {
-                for(int i = 0; i < 7; ++i)
-                {
-                    if(state.is_legal_move(i))
-                        child_nodes.emplace_back(std::make_unique<MinimaxTreeNode>(state, other_player(to_play), i, depth - 1));
-                } 
-            }
-            
+            add_layer();
         }
 
-        MinimaxTreeNode& max_or_min_child_node()
+        MinimaxTreeNode& best_node(colour player) //need to rewrite to recurse across entire tree
         {
-            for()
+            /*auto is_second_last = true;
+            for(auto & node : child_nodes)
+            {
+                if(node.is_terminal())
+            }*/
+            if(!(is_leaf_node() || is_terminal_node()))
+            {
+                auto comp = [this](MinimaxTreeNode& a, MinimaxTreeNode& b)
+                    {
+                        return (player_turn == ai ? a.get_score() < b.get_score() : a.get_score() > b.get_score());
+                    };
+                return *std::max_element(child_nodes.begin(), child_nodes.end(), comp);
+            }
+        }
+
+        void increase_depth(int increase)
+        {
+            depth += increase;
+            if(!(is_leaf_node() || is_terminal_node()))
+            {
+                if(child_nodes.size() == 0)
+                    add_layer();
+                else
+                {
+                    for(auto& node : child_nodes)
+                    {
+                        node.increase_depth(increase);
+                    }
+                }
+            }
         }
 };
-
+/*
 class MinimaxTree
 {
     private:
         const int depth;
-
-        void build(int depth );
+        MinimaxTreeNode root_node;
 
     public:
-        MinimaxTree(int _depth) : depth(_depth)
+    
+        MinimaxTree(BitBoard& start_board, int _depth)
+         : depth(_depth), root_node(MinimaxTreeNode(start_board, yellow, ))
         {
 
         }
 
 
-};
+};*/
