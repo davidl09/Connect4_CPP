@@ -9,7 +9,7 @@
 </h3>
 <ol>
   <li>
-    $ git pull -b master https://github.com/davidl09/Connect4_CPP connect-4
+    $ git clone https://github.com/davidl09/Connect4_CPP connect-4
   </li>
   <li>
     $ cd connect-4
