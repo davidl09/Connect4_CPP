@@ -24,9 +24,23 @@
     $ make
   </li>
   <li>
-    $ ./connect-4
+    $ ./connect-4 ${SEARCH_DEPTH}
   </li>
 </ol>
+<p>
+  ${SEARCH_DEPTH} is an optional parameter specifying how many 'plys' i.e. turns the algorithm should consider. Some considerations:
+  <ul>
+    <li>
+      Any value below 3 may result in odd behaviour or bugs
+    </li>
+    <li>
+      Any value above 13-14 will make the game unplayable, due to exponentially bounded complexity of this algorithm (Worst case <b>O(7<sup>n</sup>)!!</b>)
+    </li>
+    <li>
+      The agent uses alpha-beta pruning and optimized search ordering, which causes it to start playing significantly faster once a win solution has been found.
+    </li>
+  </ul>
+</p>
 <h4>
   OPTIONAL: (make this game accessible from anywhere on the command line)
 </h4>
