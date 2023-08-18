@@ -4,11 +4,6 @@
 #include "ltable.hpp"
 #include "minimaxbit.hpp"
 
-extern "C"
-{
-    
-}
-
 int main(int argc, char* argv[]){
     std::unique_ptr<BitBoard> b(std::make_unique<BitBoard>());
     
@@ -30,7 +25,7 @@ int main(int argc, char* argv[]){
         std::cout << "Enter your move\n";
         std::cin >> move;
 
-        if(move < 0 || move > 6){
+        if(move < 0 || move > 6 || !b->is_legal_move(move)){
             std::cout << "That was an invalid move, try again\n";
             continue;
         }

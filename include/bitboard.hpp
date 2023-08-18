@@ -125,6 +125,11 @@ class BitBoard{
         }
         return false;
     }
+
+    const bool is_legal_move(int column)
+    {
+        return (column >= 0 && column < 7) && ~(all_tokens() & token_at_mask(5, column));
+    }
     
     BitBoard(){
         board[yellow] = 0;
