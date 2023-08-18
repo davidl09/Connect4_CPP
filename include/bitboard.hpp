@@ -246,7 +246,7 @@ class BitBoard{
         std::cout << "\n   ";
 
         for(int i = 0; i < 7; i++){
-            std::cout << i << " ";
+            std::cout << i + 1 << " ";
         }
 
         std::cout << std::endl;
