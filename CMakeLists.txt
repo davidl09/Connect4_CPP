@@ -5,4 +5,4 @@ include_directories(include)
 
 add_compile_options(-O3 -std=c++20 -mtune=native)
 
-add_executable(Connect4_CPP main.cpp)
+add_executable(connect-4 main.cpp)
