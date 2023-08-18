@@ -29,7 +29,7 @@ class MiniMaxBit{
     constexpr int getdepth(){
         return _depth;
     }
-/*
+
     int best_move(const std::unique_ptr<BitBoard>& board){
         std::vector<minmax_ret> moves;
         moves.reserve(7);
@@ -48,33 +48,35 @@ class MiniMaxBit{
         }
 
     }
-
+/*
     static void threaded_minimax(uint64_t board[2], minmax_ret* retval, const int depth){
         auto ptr = std::make_unique<BitBoard>(board);
         *retval = MiniMaxBit(depth).minimax(ptr, nullptr, false, depth - 1, INT32_MIN, INT32_MAX);
     }
 */
-    minmax_ret minimax(const std::unique_ptr<BitBoard>& board, LookupTable* ltable, bool maximizing, int depth, int alpha, int beta){
+    int minimax(BitBoard& board, LookupTable* ltable, bool maximizing, int depth, int alpha, int beta){
 
         //leaf node conditions
         if(depth == 0)
-            return ((minmax_ret){.column =  -1, .score = board->score(ai)/*ltable->consult(board->self())*/});
-        if(board->isdraw())
-            return(((minmax_ret){.column = -1, .score = 0}));
-        if(board->iswin(ai))
-            return ((minmax_ret){.column =  -1, .score = WIN - (100000000 * (_depth - depth))});
-        if(board->iswin(human))
-            return ((minmax_ret){.column =  -1, .score = LOSS});
+            return board.score(ai);
+        if(board.isdraw())
+            return 0;
+        if(board.iswin(ai))
+            return WIN - (100000000 * (_depth - depth));
+        if(board.iswin(human))
+            return LOSS;
 
-        minmax_ret best_move({-1, (maximizing ? INT32_MIN : INT32_MAX)}), temp_ret;
-
-        std::vector<std::unique_ptr<BitBoard>> newboards;
+        std::vector<int> newboards;
         newboards.reserve(7);
 
         for(int i = 0; i < 7; i++){ //for every potential legal move 
-
-            newboards.push_back(std::make_unique<BitBoard>(*board)); 
-            if(newboards[i]->place_token(search_order[i], (maximizing ? ai : human))){
+        if(board.is_legal_move(i))
+        {
+            newboards.emplace_back(minimax())
+        }
+        /*
+            newboards.emplace_back(BitBoard(board)); 
+            if(newboards[i].place_token(search_order[i], (maximizing ? ai : human))){
                 temp_ret = (minmax_ret){search_order[i], minimax(newboards[i], ltable, !maximizing, depth - 1, alpha, beta).score};
                 if(maximizing){
                     best_move = (temp_ret.score > best_move.score ? temp_ret : best_move);
@@ -85,7 +87,7 @@ class MiniMaxBit{
                     beta = std::min(beta, best_move.score);
                     if(beta <= alpha) break;
                 }
-            }
+            }*/
         }
         return best_move;
     }
