@@ -1,7 +1,5 @@
 
-//#include "minimax.hpp"
 #include "bitboard.hpp"
-#include "ltable.hpp"
 #include "minimaxbit.hpp"
 
 int main(int argc, char* argv[]){

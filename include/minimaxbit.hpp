@@ -4,7 +4,6 @@
 #include <algorithm>
 
 #include "bitboard.hpp"
-#include "ltable.hpp"
 
 #define ai yellow
 #define human red
@@ -31,7 +30,7 @@ class MiniMaxBit{
                 move_score_pairs.emplace_back(
                     std::make_pair(
                         search_order[i], 
-                        __minimax(BitBoard(board, search_order[i], yellow), nullptr, false, _depth - 1, INT32_MIN, INT32_MAX)
+                        __minimax(BitBoard(board, search_order[i], yellow), false, _depth - 1, INT32_MIN, INT32_MAX)
                     )   //this minimax function gets a board with ai token placed last and must therefore seek to minimize the score (it's the human's  turn)
                 );      //nullptr since lookup table is not being used (worsens performance according to benchmark)
                 //assuming always looking for best move for ai (yellow)
@@ -42,7 +41,7 @@ class MiniMaxBit{
         return std::max_element(move_score_pairs.begin(), move_score_pairs.end(), comp)->first;
     }
     
-    const int __minimax(BitBoard&& board, LookupTable* ltable, bool maximizing, int depth, int alpha, int beta){
+    const int __minimax(BitBoard&& board, bool maximizing, int depth, int alpha, int beta){
 
         //leaf node conditions
         if(depth == 0)
@@ -60,7 +59,7 @@ class MiniMaxBit{
         for(int i = 0; i < 7; i++){ //for every potential legal move 
             if(board.is_legal_move(i))
             {
-                newboards.emplace_back(__minimax(BitBoard(board, search_order[i], static_cast<colour>(!maximizing)), nullptr, !maximizing, depth - 1, alpha, beta));
+                newboards.emplace_back(__minimax(BitBoard(board, search_order[i], static_cast<colour>(!maximizing)), !maximizing, depth - 1, alpha, beta));
                 if(maximizing)
                 {
                     alpha = std::max(newboards.back(), alpha);
