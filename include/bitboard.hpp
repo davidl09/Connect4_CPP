@@ -141,6 +141,13 @@ class BitBoard{
         board[red] = _red;
     }
 
+    BitBoard(const BitBoard& old_board, int new_move_col, colour to_play)
+    {
+        this->board[yellow] = old_board.board[yellow];
+        this->board[red] = old_board.board[red];
+        this->place_token(new_move_col, to_play);
+    }
+
     std::array<uint64_t, 2>& self(){
         return board;
     }

@@ -30,31 +30,11 @@ class MiniMaxBit{
         return _depth;
     }
 
-    int best_move(const std::unique_ptr<BitBoard>& board){
-        std::vector<minmax_ret> moves;
-        moves.reserve(7);
-
-        std::vector<std::thread> move_threads;
-        move_threads.reserve(7);
-
-        for(int i = 0; i < 7; i++){
-            moves.push_back((minmax_ret){search_order[i], INT32_MIN});
-
-            move_threads.push_back(std::thread(threaded_minimax, board->self(), &(moves[i]), this->_depth));
-        }
-
-        for(int i = 0; i < 7; i++){
-
-        }
-
+    int best_move(BitBoard& board){
+        
     }
-/*
-    static void threaded_minimax(uint64_t board[2], minmax_ret* retval, const int depth){
-        auto ptr = std::make_unique<BitBoard>(board);
-        *retval = MiniMaxBit(depth).minimax(ptr, nullptr, false, depth - 1, INT32_MIN, INT32_MAX);
-    }
-*/
-    int minimax(BitBoard& board, LookupTable* ltable, bool maximizing, int depth, int alpha, int beta){
+    
+    const int minimax(BitBoard& board, LookupTable* ltable, bool maximizing, int depth, int alpha, int beta){
 
         //leaf node conditions
         if(depth == 0)
@@ -72,7 +52,7 @@ class MiniMaxBit{
         for(int i = 0; i < 7; i++){ //for every potential legal move 
         if(board.is_legal_move(i))
         {
-            newboards.emplace_back(minimax())
+            newboards.emplace_back(minimax(BitBoard(board, search_order[i], static_cast<colour>(~maximizing)), nullptr, ~maximizing, depth - 1, alpha, beta));
         }
         /*
             newboards.emplace_back(BitBoard(board)); 
