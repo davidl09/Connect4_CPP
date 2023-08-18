@@ -115,7 +115,7 @@ class BitBoard{
     //game utility functions
 
     bool place_token(const int column, const colour c){
-        if((token_at_mask(top_row, column) & all_tokens()) == 0){
+        if(!(token_at_mask(top_row, column) & all_tokens())){
             int i = 5;
 
             while(--i >= 0 && (token_at_mask(i, column) & all_tokens()) == 0);
@@ -128,7 +128,7 @@ class BitBoard{
 
     const bool is_legal_move(int column)
     {
-        return (column >= 0 && column < 7) && ~(all_tokens() & token_at_mask(5, column));
+        return (column >= 0 && column < 7) && (!(all_tokens() & token_at_mask(5, column)));
     }
     
     BitBoard(){
@@ -141,7 +141,7 @@ class BitBoard{
         board[red] = _red;
     }
 
-    BitBoard(const BitBoard& old_board, int new_move_col, colour to_play)
+    BitBoard(BitBoard& old_board, int new_move_col, colour to_play)
     {
         this->board[yellow] = old_board.board[yellow];
         this->board[red] = old_board.board[red];

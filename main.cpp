@@ -5,19 +5,15 @@
 #include "minimaxbit.hpp"
 
 int main(int argc, char* argv[]){
-    std::unique_ptr<BitBoard> b(std::make_unique<BitBoard>());
-    
-    LookupTable table;
+    BitBoard b;
     int minimaxdepth;
     try{
         minimaxdepth = (argc > 1 ? std::stoi(argv[1]) : 11);
     }catch(...){std::cout << ("Invalid depth option, using default=11\n");}
 
     MiniMaxBit algo = MiniMaxBit(minimaxdepth);
-    minmax_ret score_col;
-
-    b->print_board();
-
+    
+    b.print_board();
 
     int move;
     while(true){
@@ -25,30 +21,30 @@ int main(int argc, char* argv[]){
         std::cout << "Enter your move\n";
         std::cin >> move;
 
-        if(move < 0 || move > 6 || !b->is_legal_move(move)){
+        if(!b.is_legal_move(move)){
             std::cout << "That was an invalid move, try again\n";
             continue;
         }
 
-        b->place_token(move, red);
-        b->print_board();
+        b.place_token(move, red);
+        b.print_board();
 
         std::cout << "AI plays...\n";
-        score_col = algo.minimax(b, &table, true, algo.getdepth(), INT32_MIN, INT32_MAX);
-        std::cout << "AI played in column: " << score_col.column << "\n";
+        move = algo.best_move(b);
+        std::cout << "AI played in column: " << move << "\n";
 
-        b->place_token(score_col.column, ai);
-        b->print_board();
+        b.place_token(move, ai);
+        b.print_board();
 
-        if(b->iswin(ai)){
+        if(b.iswin(ai)){
             std::cout << "AI wins!\n";
             exit(0);
         }
-        if(b->iswin(human)){
+        if(b.iswin(human)){
             std::cout << "You win!\n";
             exit(0);
         }
-        if(b->isdraw()){
+        if(b.isdraw()){
             std::cout << "Draw...\n";
             exit(0);
         }
