@@ -131,8 +131,7 @@ class BitBoard{
 
     const bool is_legal_move(int column)
     {
-        assert(column >= 0 && column < 7);
-        return ~(all_tokens() & token_at_mask(5, column));
+        return (column >= 0 && column < 7) && ~(all_tokens() & token_at_mask(5, column));
     }
     
     BitBoard(){
