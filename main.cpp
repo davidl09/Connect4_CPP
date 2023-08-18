@@ -18,6 +18,7 @@ int main(int argc, char* argv[]){
         
         std::cout << "Enter your move\n";
         std::cin >> move;
+        --move;
 
         if(!b.is_legal_move(move)){
             std::cout << "That was an invalid move, try again\n";
