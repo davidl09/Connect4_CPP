@@ -193,15 +193,15 @@ class BitBoard{
 
                     score += 
                         (
-                        std::__popcount<uint64_t>(board[player] & square_mask(i, j)) * 
-                        std::__popcount(board[player] & x_mask(i, j)) +
-                        std::__popcount(board[player] & t_mask(i, j))
+                        std::popcount<uint64_t>(board[player] & square_mask(i, j)) * 
+                        std::popcount(board[player] & x_mask(i, j)) +
+                        std::popcount(board[player] & t_mask(i, j))
                         ) 
                         -
                         (
-                        std::__popcount<uint64_t>(board[other_player(player)] & square_mask(i, j)) *
-                        std::__popcount(board[other_player(player)] & x_mask(i, j)) +
-                        std::__popcount(board[other_player(player)] & t_mask(i, j))
+                        std::popcount<uint64_t>(board[other_player(player)] & square_mask(i, j)) *
+                        std::popcount(board[other_player(player)] & x_mask(i, j)) +
+                        std::popcount(board[other_player(player)] & t_mask(i, j))
                         );
                 }
                 
@@ -217,13 +217,13 @@ class BitBoard{
             for(int j = 1; j < 6; j+=2){
                 if((someboard[0] | someboard[1]) & square_mask(i, j)){
 
-                    score += (std::__popcount<uint64_t>(someboard[player] & square_mask(i, j)) + 
-                        std::__popcount(someboard[player] & x_mask(i, j)) +
-                        std::__popcount(someboard[player] & t_mask(i, j)));
+                    score += (std::popcount<uint64_t>(someboard[player] & square_mask(i, j)) + 
+                        std::popcount(someboard[player] & x_mask(i, j)) +
+                        std::popcount(someboard[player] & t_mask(i, j)));
 
-                    score -= (std::__popcount<uint64_t>(someboard[other_player(player)] & square_mask(i, j)) + 
-                        std::__popcount(someboard[other_player(player)] & x_mask(i, j)) + 
-                        std::__popcount(someboard[other_player(player)] & t_mask(i, j)));
+                    score -= (std::popcount<uint64_t>(someboard[other_player(player)] & square_mask(i, j)) + 
+                        std::popcount(someboard[other_player(player)] & x_mask(i, j)) + 
+                        std::popcount(someboard[other_player(player)] & t_mask(i, j)));
                 }
                 
             }
