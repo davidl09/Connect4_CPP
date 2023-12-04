@@ -3,19 +3,20 @@
 #include "minimaxbit.hpp"
 
 int main(int argc, char* argv[]){
-    BitBoard b;
+    /*
+     * BitBoard b;
     int minimaxdepth;
     try{
         minimaxdepth = (argc > 1 ? std::stoi(argv[1]) : 11);
     }catch(...){std::cout << ("Invalid depth option, using default=11\n");}
 
     auto algo = MiniMaxBit(minimaxdepth);
-    
+
     b.print_board();
 
     int move;
     while(true){
-        
+
         std::cout << "Enter your move\n";
         std::cin >> move;
         --move;
@@ -48,5 +49,5 @@ int main(int argc, char* argv[]){
             exit(0);
         }
     }
-    
+*/
 }
