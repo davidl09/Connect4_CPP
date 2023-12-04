@@ -51,62 +51,62 @@ class BitBoard{
     */
     public:
 
-    const uint64_t all_tokens(){
+    [[nodiscard]] constexpr uint64_t all_tokens() const {
         return board[yellow] | board[red];
     }
 
-    const uint64_t all_empty(){
+    [[nodiscard]] constexpr uint64_t all_empty() const {
         return ~all_tokens();
     }
 
     //These functions return a group of 4 tokens in the indicated position and orientation, as well as other masks used for evaluation
-    static inline const constexpr uint64_t row4_mask(int row, int left_col){
+    static inline constexpr uint64_t row4_mask(int row, int left_col){
         assert(left_col < 4);
         return ((((uint64_t)0xF) << left_col) << (7 * row));
     }
 
-    static inline const constexpr uint64_t col4_mask(int bottom_row, int col){
+    static inline constexpr uint64_t col4_mask(int bottom_row, int col){
         assert(bottom_row < 3);
         return ((((uint64_t)0x204081) << col) << (7 * bottom_row));
     }
 
-    static inline const constexpr uint64_t right_diag_mask(int bottom_row, int bottom_col){
+    static inline constexpr uint64_t right_diag_mask(int bottom_row, int bottom_col){
         assert(bottom_row < 3 && bottom_col < 4);
         return ((((uint64_t)0x1010101) << bottom_col) << (7 * bottom_row));
     }
 
-    static inline const constexpr uint64_t left_diag_mask(int bottom_row, int bottom_col){
+    static inline constexpr uint64_t left_diag_mask(int bottom_row, int bottom_col){
         assert(bottom_row < 3 && bottom_col > 2 && bottom_col < 7);
         return ((((uint64_t)0x41041) << bottom_col) << (7 * bottom_row));
     }
 
-    static inline const constexpr uint64_t token_at_mask(int row, int col){
+    static inline constexpr uint64_t token_at_mask(int row, int col){
         assert(row < 6 && col < 7);
         return (((uint64_t)0x1) << (7 * row + col));
     }
 
 
-    static inline const constexpr uint64_t row_mask(int row){
+    static inline constexpr uint64_t row_mask(int row){
         assert(row < 6);
         return (((uint64_t)0x7f) << (7 * row));
     }
 
-    static inline const constexpr uint64_t col_mask(int col){
+    static inline constexpr uint64_t col_mask(int col){
         assert(col < 7);
         return (((uint64_t)0x810204081) << col);
     }
 
-    static inline const constexpr uint64_t square_mask(int center_row, int center_col){
+    static inline constexpr uint64_t square_mask(int center_row, int center_col){
         assert(center_row < top_row && center_row > 0 && center_col < 6 && center_col > 0);
         return (((uint64_t)0x1C387) << (7 * (center_row - 1) + center_col - 1));
     }
 
-    static inline const constexpr uint64_t x_mask(int center_row, int center_col){
+    static inline constexpr uint64_t x_mask(int center_row, int center_col){
         assert(center_row < top_row && center_row > 0 && center_col < 6 && center_col > 0);
         return (((uint64_t)0x14105) << (7 * (center_row - 1) + center_col - 1));
     }
 
-    static inline const constexpr uint64_t t_mask(int center_row, int center_col){
+    static inline constexpr uint64_t t_mask(int center_row, int center_col){
         assert(center_row < top_row && center_row > 0 && center_col < 6 && center_col > 0);
         return (((uint64_t)0x8382) << (7 * (center_row - 1) + center_col - 1));
     }
@@ -126,25 +126,22 @@ class BitBoard{
         return false;
     }
 
-    const bool is_legal_move(int column)
+    [[nodiscard]] bool is_legal_move(int column) const
     {
         return (column >= 0 && column < 7) && (!(all_tokens() & token_at_mask(5, column)));
     }
     
-    BitBoard(){
-        board[yellow] = 0;
-        board[red] = 0;
-    }
+    BitBoard()
+    : board({0,0})
+    {}
 
-    BitBoard(uint64_t _yellow, uint64_t _red){
-        board[yellow] = _yellow;
-        board[red] = _red;
-    }
+    BitBoard(uint64_t _yellow, uint64_t _red)
+    : board({_yellow, _red})
+    {}
 
     BitBoard(BitBoard& old_board, int new_move_col, colour to_play)
+    : board(old_board.board)
     {
-        this->board[yellow] = old_board.board[yellow];
-        this->board[red] = old_board.board[red];
         this->place_token(new_move_col, to_play);
     }
 
@@ -152,9 +149,8 @@ class BitBoard{
         return board;
     }
     
-    bool isdraw(){ //must call this AFTER iswin()!!!
-        if((all_tokens() & row_mask(5)) == row_mask(5)) return true;
-        return false;
+    [[nodiscard]] bool isdraw() const{ //must call this AFTER iswin()!!!
+        return ((all_tokens() & row_mask(5)) == row_mask(5));
     }
     
     bool iswin(colour player){ //for loops placed in order of frequency: games are more often won with rows/diags than columns
@@ -184,8 +180,7 @@ class BitBoard{
         return false;
     }
 
-    const inline int score(colour player){ //always returns score relative to yellow (ai) player.
-        assert(player != none);
+    [[nodiscard]] int score(colour player) const { //always returns score relative to yellow (ai) player.
         int score(0);
         for(int i = 1; i < 4; i+=2){
             for(int j = 1; j < 6; j+=2){
@@ -210,7 +205,7 @@ class BitBoard{
         return score;
     }
 
-    static const inline int score(std::array<uint64_t, 2> someboard, colour player){
+    constexpr static int score(std::array<uint64_t, 2> someboard, colour player){
         assert(player != none);
         int score(0);
         for(int i = 1; i < 4; i+=2){
@@ -231,7 +226,7 @@ class BitBoard{
         return score;
     }
 
-    const void print_board(){
+    void print_board() const {
         for(int i = top_row; i >= 0; i--){
 
             std::cout << i << "  ";
@@ -252,8 +247,8 @@ class BitBoard{
         std::cout << std::endl;
     }
 
-    static inline const void print_bitboard(uint64_t board){
-        for(int i = top_row; i >= 0; i--){
+    static void print_bitboard(uint64_t board) {
+        for (int i = top_row; i >= 0; i--){
             for(int j = 0; j < 7; j++){
                 std::cout << ((board >> (7 * i + j)) & (uint64_t)0b1);
             }std::cout << "\n";

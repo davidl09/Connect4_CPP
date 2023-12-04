@@ -9,7 +9,7 @@ int main(int argc, char* argv[]){
         minimaxdepth = (argc > 1 ? std::stoi(argv[1]) : 11);
     }catch(...){std::cout << ("Invalid depth option, using default=11\n");}
 
-    MiniMaxBit algo = MiniMaxBit(minimaxdepth);
+    auto algo = MiniMaxBit(minimaxdepth);
     
     b.print_board();
 
