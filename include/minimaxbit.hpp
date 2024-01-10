@@ -15,7 +15,7 @@ class MiniMaxBit{
     const int _depth;
 
     public:
-    MiniMaxBit(int depth_t) : _depth(depth_t){};
+    MiniMaxBit(int depth_t = 11) : _depth(depth_t){};
 
     constexpr int getdepth(){
         return _depth;
