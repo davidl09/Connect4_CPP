@@ -6,6 +6,7 @@
 void run(void *args) {
     static Game game{"Test", {800, 600}};
     game.step();
+
 }
 
 int main(int, char *[]) {

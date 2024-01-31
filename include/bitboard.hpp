@@ -57,8 +57,60 @@ class BitBoard{
     */
     public:
 
-    colour at(const int row, const int col) {
-        if (not (inRange(0, )))
+    struct const_iterator {
+        const_iterator(const BitBoard& parent_, const int row_, const int col_)
+            : row(row_), col(col_), parent(parent_)
+        {}
+
+        const_iterator& operator++() {
+            ++col;
+            if (col >= 7) {
+                col = 0;
+                ++row;
+            }
+            return *this;
+        }
+
+        auto operator<=> (const const_iterator& other) const {
+            const int thisCoord = row * 7 + col;
+            const int otherCoord = other.row * 7 + other.col;
+            return thisCoord <=> otherCoord;
+        }
+
+        const const_iterator operator++(int) {
+            const const_iterator temp{*this};
+            ++(*this);
+            return temp;
+        }
+
+        colour operator*() {
+            return parent[row, col];
+        }
+
+        const std::pair<int, int> position() {
+            return {row, col};
+        }
+    private:
+        int row, col;
+        const BitBoard& parent;
+    };
+
+    const_iterator begin() const {
+        return const_iterator{*this, 0, 0};
+    }
+
+    const_iterator end() const {
+        return const_iterator{*this, 5, 7};
+    }
+
+    colour operator[](const int row, const int col) const {
+        if (not (inRange(0, 6, row) && inRange(0, 7, col))) {
+            return colour::none;
+        }
+        if (board[yellow] & token_at_mask(row, col)) {
+            return yellow;
+        }
+        return (board[red] & token_at_mask(row, col) ? red : none);
     }
 
     [[nodiscard]] constexpr uint64_t all_tokens() const {

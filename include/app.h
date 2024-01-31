@@ -53,7 +53,7 @@ class App {
 protected:
     struct SDLTextureImg;
 public:
-    App(const std::string& name, const ScreenDims size, const int32_t init_flags = SDL_INIT_VIDEO, const SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE, const SDL_RendererFlags renderFlags = SDL_RENDERER_ACCELERATED)
+    App(const std::string& name, const ScreenDims size, const int32_t init_flags = SDL_INIT_EVERYTHING, const SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE, const SDL_RendererFlags renderFlags = SDL_RENDERER_ACCELERATED)
         :
     initStatus(SDL_Init(init_flags)), //must be initialized first to allow calling SDL_Init before SDL_CreateWindow
     window(SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.width, size.height, flags), SDL_DestroyWindow),
@@ -73,19 +73,20 @@ public:
     }
 
     [[nodiscard]]
-    auto loadBMPImageToTexture(const std::string& pathname) const {
+    auto loadBMPImageToTexture(const std::string& pathname, const std::pair<int, int>& displaySize = {-1, -1}) const {
+        
         sdl_ptr<SDL_Surface> image{SDL_LoadBMP(pathname.c_str()), SDL_FreeSurface};
         if (!image) {
             throw std::invalid_argument("Could not locate BMP file!");
         }
-        return SDLTextureImg(*this, std::move(image));
+        return SDLTextureImg(*this, image);
     }
 
     void pushTexture(const SDLTextureImg& texture, const SDL_Rect where) const {
         SDL_RenderCopy(renderer.get(), texture.texture.get(), &where, &texture.data);
     }
 
-    void showAndClear() {
+    void showAndClear() const {
         SDL_RenderPresent(renderer.get());
         clear();
     }

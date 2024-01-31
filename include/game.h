@@ -22,6 +22,7 @@ public:
     {
         images.insert({"yellowtoken", std::move(loadBMPImageToTexture("images/yellowtoken.bmp"))});
         images.insert({"redtoken", std::move(loadBMPImageToTexture("images/redtoken.bmp"))});
+        images.insert({"empty", std::move(loadBMPImageToTexture("images/emptytoken.bmp"))});
     }
 
     void step() {
@@ -35,6 +36,8 @@ public:
                 int x;
                 if (SDL_GetMouseState(&x, nullptr) == SDL_BUTTON(1)) {
                     handlePlayerTurn(whichColumn(x));
+                    board.print_board();
+                    std::cout << std::endl;
                 }
             }
         }
@@ -50,10 +53,15 @@ private:
     }
 
     void draw() {
-
+        for (auto square = board.begin(); square < board.end(); ++square) {
+            if (*square == none) {
+                continue;
+            }
+            drawToken(*square, square.position().first, square.position().second);
+        }
     }
 
-    void handlePlayerTurn(int columnPlayed) {
+    void handlePlayerTurn(const int columnPlayed) {
         if (board.place_token(columnPlayed, turn_)) {
             turn_ = !turn_;
         }

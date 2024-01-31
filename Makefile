@@ -7,7 +7,7 @@ TARGET := main.html
 SRC := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ := $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRC))
 
-CXXFLAGS := -I$(INCLUDE_DIR) --std=c++20 -sUSE_SDL=2 -O2
+CXXFLAGS := -I$(INCLUDE_DIR) --std=c++23 -sUSE_SDL=2 -O2
 
 LDFLAGS := -sALLOW_MEMORY_GROWTH=1 -sASYNCIFY -sASSERTIONS --embed-file images@/images
 
