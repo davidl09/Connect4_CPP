@@ -2,6 +2,7 @@
 #define MINIMAXBIT_HPP
 
 #include <algorithm>
+#include <vector>
 
 #include "bitboard.hpp"
 

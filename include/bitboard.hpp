@@ -9,6 +9,7 @@
 #include <bit>
 
 #include "colours.hpp"
+#include "game.h"
 
 enum colour{
     yellow = 0 ,
@@ -16,16 +17,21 @@ enum colour{
     none
 };
 
+inline colour operator!(colour turn) {
+    return turn == red ? yellow : turn == yellow ? red : none;
+}
+
 #define top_row 5
 #define other_player(a) (1 - a)
 
 #define WIN INT32_MAX
 #define LOSS INT32_MIN
 
-class BitBoard{
+constexpr bool inRange(const int begin, const int end, const int x) {
+    return x >= begin && x < end;
+}
 
-    private:
-    
+class BitBoard{
     std::array<uint64_t, 2> board;
 
     
@@ -50,6 +56,10 @@ class BitBoard{
 
     */
     public:
+
+    colour at(const int row, const int col) {
+        if (not (inRange(0, )))
+    }
 
     [[nodiscard]] constexpr uint64_t all_tokens() const {
         return board[yellow] | board[red];
@@ -128,7 +138,7 @@ class BitBoard{
 
     [[nodiscard]] bool is_legal_move(int column) const
     {
-        return (column >= 0 && column < 7) && (!(all_tokens() & token_at_mask(5, column)));
+        return inRange(0, 7, column) && !(all_tokens() & token_at_mask(top_row, column));
     }
     
     BitBoard()
