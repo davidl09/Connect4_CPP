@@ -1,15 +1,15 @@
-CXX := emcc
+CXX := g++#emcc
 SRC_DIR := .
 INCLUDE_DIR := include
 BUILD_DIR := build
-TARGET := main.html
+TARGET := main
 
 SRC := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ := $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRC))
 
-CXXFLAGS := -I$(INCLUDE_DIR) --std=c++23 -sUSE_SDL=2 -O2
+CXXFLAGS := -I$(INCLUDE_DIR) --std=c++23 -Og -fext-numeric-literals#-sUSE_SDL=2
 
-LDFLAGS := -sALLOW_MEMORY_GROWTH=1 -sASYNCIFY -sASSERTIONS --embed-file images@/images
+LDFLAGS := -lSDL2 -ltbb#-sALLOW_MEMORY_GROWTH=1 -sASSERTIONS --embed-file images@/images -fexceptions
 
 .PHONY: all clean
 

@@ -12,7 +12,7 @@
 
 class MiniMaxBit{
     private:
-    const int search_order[7] = {3,2,4,1,5,0,6};
+    constexpr static int search_order[7] = {3,2,4,1,5,0,6};
     const int _depth;
 
     public:
@@ -76,8 +76,7 @@ class MiniMaxBit{
 
         if(maximizing)
             return *std::max_element(newboards.begin(), newboards.end());
-        else 
-            return *std::min_element(newboards.begin(), newboards.end());
+        return *std::min_element(newboards.begin(), newboards.end());
     }
     
 };

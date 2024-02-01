@@ -5,7 +5,9 @@
 #ifndef APP_H
 #define APP_H
 
+#ifdef __EMSCRIPTEN__
 #include <emscripten.h>
+#endif
 #include <string>
 #include <SDL2/SDL.h>
 #include <iostream>
@@ -82,13 +84,24 @@ public:
         return SDLTextureImg(*this, image);
     }
 
+    void pushTexture(SDLTextureImg& texture, const std::pair<int, int> xy) {
+        SDL_Rect temp{texture.data};
+        temp.x = xy.first;
+        temp.y = xy.second;
+        SDL_RenderCopy(renderer.get(), texture.texture.get(), nullptr, &temp);
+    }
+
     void pushTexture(const SDLTextureImg& texture, const SDL_Rect where) const {
-        SDL_RenderCopy(renderer.get(), texture.texture.get(), &where, &texture.data);
+        SDL_RenderCopy(renderer.get(), texture.texture.get(), nullptr, &texture.data);
     }
 
     void showAndClear() const {
-        SDL_RenderPresent(renderer.get());
+        show();
         clear();
+    }
+
+    void show() const {
+        SDL_RenderPresent(renderer.get());
     }
 
     void clear() const {
