@@ -6,7 +6,6 @@
 #include <iostream>
 #include <vector>
 #include <array>
-#include <bit>
 
 #include "colours.hpp"
 
@@ -88,27 +87,27 @@ class BitBoard{
 
     static inline constexpr uint64_t row_mask(int row){
         assert(row < 6);
-        return (((uint64_t)0x7f) << (7 * row));
+        return (static_cast<uint64_t>(0x7f) << (7 * row));
     }
 
     static inline constexpr uint64_t col_mask(int col){
         assert(col < 7);
-        return (((uint64_t)0x810204081) << col);
+        return (static_cast<uint64_t>(0x810204081) << col);
     }
 
     static inline constexpr uint64_t square_mask(int center_row, int center_col){
         assert(center_row < top_row && center_row > 0 && center_col < 6 && center_col > 0);
-        return (((uint64_t)0x1C387) << (7 * (center_row - 1) + center_col - 1));
+        return (static_cast<uint64_t>(0x1C387) << (7 * (center_row - 1) + center_col - 1));
     }
 
     static inline constexpr uint64_t x_mask(int center_row, int center_col){
         assert(center_row < top_row && center_row > 0 && center_col < 6 && center_col > 0);
-        return (((uint64_t)0x14105) << (7 * (center_row - 1) + center_col - 1));
+        return (static_cast<uint64_t>(0x14105) << (7 * (center_row - 1) + center_col - 1));
     }
 
     static inline constexpr uint64_t t_mask(int center_row, int center_col){
         assert(center_row < top_row && center_row > 0 && center_col < 6 && center_col > 0);
-        return (((uint64_t)0x8382) << (7 * (center_row - 1) + center_col - 1));
+        return (static_cast<uint64_t>(0x8382) << (7 * (center_row - 1) + center_col - 1));
     }
 
 
@@ -118,7 +117,7 @@ class BitBoard{
         if(!(token_at_mask(top_row, column) & all_tokens())){
             int i = 5;
 
-            while(--i >= 0 && (token_at_mask(i, column) & all_tokens()) == 0);
+            while(--i >= 0 && (token_at_mask(i, column) & all_tokens()) == 0) {}
 
             board[c] |= token_at_mask(i + 1, column);
             return true;
@@ -139,7 +138,7 @@ class BitBoard{
     : board({_yellow, _red})
     {}
 
-    BitBoard(BitBoard& old_board, int new_move_col, colour to_play)
+    BitBoard(const BitBoard& old_board, const int new_move_col, const colour to_play)
     : board(old_board.board)
     {
         this->place_token(new_move_col, to_play);
@@ -153,7 +152,7 @@ class BitBoard{
         return ((all_tokens() & row_mask(5)) == row_mask(5));
     }
     
-    bool iswin(colour player){ //for loops placed in order of frequency: games are more often won with rows/diags than columns
+    [[nodiscard]] bool iswin(colour player) const { //for loops placed in order of frequency: games are more often won with rows/diags than columns
         for(int i = 0; i < 6; i++){ //iterate over all possible rows
             if(board[player] & row_mask(i)){ //check if tokens in row/col to speed up
                 for(int j = 0; j < 4; j++){

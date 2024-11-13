@@ -2,6 +2,8 @@
 #include "bitboard.hpp"
 #include "minimaxbit.hpp"
 
+#include <format>
+
 MiniMaxBit algo;
 BitBoard board;
 
@@ -50,7 +52,7 @@ int main(int argc, char* argv[]){
         minimaxdepth = (argc > 1 ? std::stoi(argv[1]) : 11);
     }
     catch(std::invalid_argument& e) {
-        std::cout << (std::format("Invalid depth option: {}, using default=11\n", e.what()));
+        std::cout << std::format("Invalid depth option: {}, using default=11\n", e.what());
     }
 
     algo = MiniMaxBit(minimaxdepth);
