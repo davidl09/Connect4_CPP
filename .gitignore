@@ -1,10 +1,13 @@
 cmake-build-debug/
+cmake-build-release/
 build/
+.idea/
+.DS_Store
+
 
 # Prerequisites
 *.d
 *.save
-build/
 .vscode/
 *.cbp
 # Compiled Object files

@@ -15,7 +15,7 @@ void play() {
     std::cin >> move;
     --move;
 
-    if(!board.is_legal_move(move)){
+    if(not board.is_legal_move(move)){
         std::cout << "That was an invalid move, try again\n";
         return;
     }
@@ -25,7 +25,7 @@ void play() {
 
     std::cout << "AI plays...\n";
     move = algo.best_move(board);
-    std::cout << "AI played in column: " << move << "\n";
+    std::cout << "AI played in column: " << move + 1 << "\n";
 
     board.place_token(move, ai);
     board.print_board();
@@ -45,10 +45,15 @@ void play() {
 }
 
 int main(int argc, char* argv[]){
-    int minimaxdepth;
+    int minimaxdepth = 11;
     try{
         minimaxdepth = (argc > 1 ? std::stoi(argv[1]) : 11);
-    }catch(...){std::cout << ("Invalid depth option, using default=11\n");}
+    }
+    catch(std::invalid_argument& e) {
+        std::cout << (std::format("Invalid depth option: {}, using default=11\n", e.what()));
+    }
+
+    algo = MiniMaxBit(minimaxdepth);
     
     board.print_board();
 

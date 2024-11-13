@@ -10,38 +10,36 @@
 
 
 class MiniMaxBit{
-    private:
-    const int search_order[7] = {3,2,4,1,5,0,6};
-    const int _depth;
+    constexpr static std::array search_order = {3,2,4,1,5,0,6};
+    int _depth;
 
     public:
-    MiniMaxBit(int depth_t = 11) : _depth(depth_t){};
+    explicit constexpr MiniMaxBit(int depth_t = 11) : _depth(depth_t){};
 
-    constexpr int getdepth(){
+    [[nodiscard]] constexpr int getdepth() const{
         return _depth;
     }
 
     int best_move(BitBoard& board){
         std::vector<std::pair<int, int>> move_score_pairs;
-        for(int i = 0; i < 7; i++)
+        for(const int i : search_order)
         {
-            if(board.is_legal_move(search_order[i]))
+            if(board.is_legal_move(i))
             {
                 move_score_pairs.emplace_back(
-                    std::make_pair(
-                        search_order[i], 
-                        __minimax(BitBoard(board, search_order[i], yellow), false, _depth - 1, INT32_MIN, INT32_MAX)
-                    )   //this minimax function gets a board with ai token placed last and must therefore seek to minimize the score (it's the human's  turn)
+                    i,
+                        __minimax(BitBoard(board, i, yellow), false, _depth - 1, INT32_MIN, INT32_MAX)
+                      //this minimax function gets a board with ai token placed last and must therefore seek to minimize the score (it's the human's  turn)
                 );      //nullptr since lookup table is not being used (worsens performance according to benchmark)
                 //assuming always looking for best move for ai (yellow)
             }
         }
 
         auto comp = [](const std::pair<int, int> a, const std::pair<int, int> b){return a.second < b.second;};
-        return std::max_element(move_score_pairs.begin(), move_score_pairs.end(), comp)->first;
+        return std::ranges::max_element(move_score_pairs, comp)->first;
     }
     
-    const int __minimax(BitBoard&& board, bool maximizing, int depth, int alpha, int beta){
+    int __minimax(BitBoard&& board, bool maximizing, int depth, int alpha, int beta){
 
         //leaf node conditions
         if(depth == 0)
@@ -74,9 +72,8 @@ class MiniMaxBit{
         }
 
         if(maximizing)
-            return *std::max_element(newboards.begin(), newboards.end());
-        else 
-            return *std::min_element(newboards.begin(), newboards.end());
+            return *std::ranges::max_element(newboards);
+        return *std::ranges::min_element(newboards);
     }
     
 };
